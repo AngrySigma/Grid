@@ -1,7 +1,9 @@
 clear
 clc
+cd 'D:\GREAT_VAULT\Study\Cathedral\Grid\Grid_map'
 ex = Grid;
-for i = 1:10
-ex.add_node(i);
-end
+ex.add_node('1');
+ex.add_node('2');
+ex.add_line('1');
+a = ex.find_node('2')
 disp (ex)

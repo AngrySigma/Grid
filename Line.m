@@ -1,16 +1,17 @@
-classdef Line
+classdef Line < handle
     properties
         id
+        
     end
     methods
-        function obj = Line(id)
-            obj.id = id;
+        function this = Line(id)
+            this.id = id;
         end
-        function check_id(obj)
-            disp(obj.id)
+        function check_id(this)
+            disp(this.id)
         end
-        function obj = set.id(obj, user_id)
-            obj.id = user_id;
+        function set.id(this, user_id)
+            this.id = user_id;
         end
     end
     

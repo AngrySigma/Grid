@@ -4,14 +4,14 @@ classdef Node < handle
         
     end
     methods
-        function obj = Node(id)
-            obj.id = id;
+        function this = Node(id)
+            this.id = id;
         end
-        function check_id(obj)
-            disp(obj.id)
+        function check_id(this)
+            disp(this.id)
         end
-        function obj = set.id(obj, user_id)
-            obj.id = user_id;
+        function set.id(this, user_id)
+            this.id = user_id;
         end
     end
 
