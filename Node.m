@@ -15,8 +15,16 @@ classdef Node < handle
             this.id = node_id;
             varargin = cell2mat(varargin);
             if ~isempty(varargin)
-                this.load = varargin;
                 %check for numeric
+%                 if ~isnumeric(varargin)
+%                     error('Load should be numeric value');
+%                     % validateattributes(4, {'numeric'}, {'size', 1}) -
+%                     % potom mogno zdelat
+%                 else
+%                     this.load = varargin;
+%                 end
+                validateattributes(varargin, {'numeric'}, {'size', [3, 3]});
+                this.load = varargin;
             end
          end
          

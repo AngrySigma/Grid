@@ -1,4 +1,4 @@
-clear all
+clear nGrid
 % Load paramters '*.mat' file
 load('testing_parameters.mat');
 % Assign input properties
@@ -44,6 +44,7 @@ nGrid.find_line('Line_3').w = line_W;
 nGrid.add_line('Line_4',  'intN_2', 'Load_2');
 nGrid.find_line('Line_4').len = length_4;
 nGrid.find_line('Line_4').w = line_W;
+nGrid.insert_fault('Line_1', 1, ones(1,6))
 % Set source parameters
 % nGrid.setSource( src_ID, src_EMF, src_Z0, src_Zn );
 nGrid.emf = src_EMF;

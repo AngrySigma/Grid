@@ -106,16 +106,16 @@ classdef Grid < handle
         function calculate_phasors(this)
             src_id = this.source_id;
             this.find_node(src_id).calculate_sigma_node();
-            src_emf = this.emf*[1; exp(2i*pi/3);  exp(-2i*pi/3)];
-            z_src = eye(3,3)*this.z0+ones(3,3)*this.zn;
-            this.find_node(src_id).U = (eye(3,3)+z_src*this.find_node(src_id).sigma)^(-1)*src_emf;
-            this.find_node(src_id).I = this.find_node(src_id).sigma*this.find_node(src_id).U;
+            src_emf = this.emf * [1; exp(2i * pi / 3);  exp(-2i * pi / 3)];
+            z_src = eye(3,3) * this.z0 + ones(3,3) * this.zn;
+            this.find_node(src_id).U = (eye(3,3) + z_src * this.find_node(src_id).sigma)^(-1) * src_emf;
+            this.find_node(src_id).I = this.find_node(src_id).sigma * this.find_node(src_id).U;
             for k = 1:numel(this.find_node(src_id).c_line)
                 this.find_node(src_id).c_line{k}.spread_phasors_line();
             end
         end
         
-                function plot_grid(this)
+        function plot_grid(this)
             figure
             hold on
             this.nodes{1}.coord = [0, 0];
@@ -130,6 +130,26 @@ classdef Grid < handle
                     [this.lines{i}.p_node.coord(2), ...
                     this.lines{i}.c_node.coord(2)],'-ok','MarkerSize',10)
             end
+        end
+        
+        function insert_node(this, line_id, xi, new_node_id, new_node_load)
+            this.add_node(new_node_id, new_node_load);
+            old_child_id = this.find_line(line_id).c_node.id;
+            this.find_line(line_id).c_node = this.find_node(new_node_id);
+            this.find_node(new_node_id).p_line = this.find_line(line_id);
+            this.find_node(old_child_id).p_line = {};
+            this.add_line([line_id, '_2'], new_node_id, old_child_id);
+            this.find_line([line_id, '_2']).w = this.find_line(line_id).w;
+            this.find_line([line_id, '_2']).len = this.find_line(line_id).len * (1 - xi);
+            this.find_line(line_id).id = [line_id, '_1'];
+            this.find_line([line_id, '_1']).len = this.find_line([line_id, '_1']).len * xi;
+        end
+        
+        function insert_fault(this, line_id, xi, vec)
+            this.insert_node(line_id, xi, 'fault',...
+                [vec(4) + vec(1) + vec(3), -vec(1), -vec(3); ...
+                -vec(1), vec(5) + vec(1) + vec(2), -vec(2); ...
+                -vec(3), -vec(2), vec(6) + vec(2) + vec(3)]);
         end
     end
 end

@@ -220,10 +220,11 @@ end
 
 try
     ex = Grid();
-    ex.add_node('1', pi);
-    ex.add_node('2', pi);
+    ex.add_node('1', ones(3));
+    ex.add_node('2', ones(3));
     ex.add_line('1','1','2');
-    if ex.nodes{2}.load == pi && ex.nodes{3}.load == pi
+    %if ~sum(sum(ex.nodes{2}.load == zeros(3))) && ~sum(sum(ex.nodes{3}.load == zeros(3)))
+    if isequal(ex.nodes{2}.load, ones(3)) && isequal(ex.nodes{3}.load, ones(3))
         disp('node parameters assignment: sucess')
         counter = counter + 1;
     end 
@@ -257,6 +258,20 @@ end
 if counter == 12
     disp(char({ 'Build successful', '', 'Running test'}))
     run('testScript.m')
+    results = {1, 2, 3, 4, 5};
+    for k = 1:5
+        results{k} = num2str(abs(nGrid.nodes{k}.I));
+    end
+    run('testScript_fault_false.m')
+    results_fault_false = {1, 2, 3, 4, 5};
+    for k = 1:5
+        results_fault_false{k} = num2str(abs(nGrid.nodes{k}.I));
+    end
+    if isequal(results, results_fault_false)
+        disp ('Zero load fault: Success')
+    else
+        disp('Zero load fault: Fail')
+    end
 else
     disp(char({ 'Build failed'}))
 end
