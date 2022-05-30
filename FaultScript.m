@@ -6,13 +6,17 @@ nGrid.zn = 1e-9;
 load('testing_parameters.mat');
 sigma_1 = param.sigma1;
 sigma_2 = param.sigma2;
+line_Z = param.Z;
+line_Y = param.Y;
+line_W = [ zeros(3), line_Z; line_Y, zeros(3) ];
 loads = {0.7 * sigma_1, 0.4 * sigma_1, sigma_2, 0.3 * sigma_2, 0.4 * sigma_1, 0.8 * sigma_2, sigma_1, 2 * sigma_2, 0.25 * sigma_1};
 for i = 1:7
-    nGrid.add_node(['int_', num2str(i)]);
+    nGrid.add_node(['int_', num2str(i)], zeros(3));
 end
 for i = 1:9
     nGrid.add_node(['load_', num2str(i)], loads{i});
 end
+nGrid.find_node('source').load = zeros(3,3);
 nGrid.add_line('line_1', 'source', 'int_1', 1);
 nGrid.add_line('line_2', 'int_1', 'load_1', 3);
 nGrid.add_line('line_3', 'int_1', 'int_2', 1);
@@ -29,4 +33,8 @@ nGrid.add_line('line_13', 'int_7', 'load_6', 0.3);
 nGrid.add_line('line_14', 'int_7', 'load_7', 1);
 nGrid.add_line('line_15', 'int_5', 'load_8', 0.4);
 nGrid.add_line('line_16', 'int_5', 'load_9', 1.5);
+for i = 1:16
+    nGrid.lines{i}.w = line_W;
+end
 nGrid.plot_grid();
+nGrid.calculate_phasors();
